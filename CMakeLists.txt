@@ -1,5 +1,20 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(cmake_example)
+project(x)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+
+include(BuildJemalloc)
 
 add_subdirectory(pybind11)
-pybind11_add_module(cmake_example src/main.cpp)
+
+pybind11_add_module(x src/rbdx.cc src/librbdx.cc)
+
+add_dependencies(x jemalloc)
+target_include_directories(x PRIVATE
+  ${jemalloc_INCLUDE_DIRS})
+
+target_link_libraries(x PRIVATE
+  ${jemalloc_LIBRARIES})
+
+#target_link_libraries(x PRIVATE
+#  tcmalloc)
