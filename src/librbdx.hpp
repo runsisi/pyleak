@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 
+#include "mempool.h"
+
 namespace librados {
 
 class IoCtx {
@@ -104,7 +106,7 @@ typedef struct {
 } snap_info_v2_t;
 
 typedef struct {
-  std::string id;
+  mempool::rbdx::string id;
   std::string name;
   uint8_t order;
   uint64_t size;
@@ -173,7 +175,7 @@ public:
   // xImage
   //
   int list_info(librados::IoCtx& ioctx,
-          std::map<std::string, std::pair<image_info_t, int>>* infos);
+          mempool::rbdx::map<mempool::rbdx::string, std::pair<image_info_t, int>>* infos);
 };
 
 }
@@ -229,7 +231,7 @@ struct xSnapInfo {
 };
 
 struct xImageInfo {
-  std::string id;
+  mempool::rbdx::string id;
   std::string name;
   uint8_t order = 0;
   uint64_t size = 0;

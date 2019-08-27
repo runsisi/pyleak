@@ -24,7 +24,7 @@ using Map_string_2_pair_du_info_t_int = std::map<std::string, std::pair<librbdx:
 using Map_string_2_pair_map_uint64_t_2_du_info_t_int = std::map<std::string, std::pair<std::map<uint64_t, librbdx::du_info_t>, int>>;
 
 using Map_string_2_string = std::map<std::string, std::string>;
-using Map_string_2_pair_image_info_t_int = std::map<std::string, std::pair<librbdx::image_info_t, int>>;
+using Map_string_2_pair_image_info_t_int = mempool::rbdx::map<mempool::rbdx::string, std::pair<librbdx::image_info_t, int>>;
 using Map_string_2_pair_image_info_v2_t_int = std::map<std::string, std::pair<librbdx::image_info_v2_t, int>>;
 using Map_string_2_pair_image_info_v3_t_int = std::map<std::string, std::pair<librbdx::image_info_v3_t, int>>;
 

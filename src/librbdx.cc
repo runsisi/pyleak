@@ -16,20 +16,20 @@ namespace librbdx {
 //
 
 int xRBD::list_info(librados::IoCtx& ioctx,
-    std::map<std::string, std::pair<image_info_t, int>>* infos) {
+    mempool::rbdx::map<mempool::rbdx::string, std::pair<image_info_t, int>>* infos) {
   int r = 0;
   infos->clear();
-  std::map<std::string, std::pair<librbd::xImageInfo, int>> tinfos;
+  mempool::rbdx::map<mempool::rbdx::string, std::pair<librbd::xImageInfo, int>> tinfos;
 //  r = librbd::api::xImage<>::list_info(ioctx, &tinfos);
 //  if (r < 0) {
 //    return r;
 //  }
 
-  for (int i = 0; i < 6000000; i++) {
+  for (int i = 0; i < 2000000; i++) {
     librbd::xImageInfo info;
-    info.id = std::move(std::to_string(i));
+    info.id = std::to_string(i).c_str();
     info.name = std::move(std::to_string(i));
-    tinfos.insert({std::to_string(i), {
+    tinfos.insert({std::to_string(i).c_str(), {
         info, 0
     }});
   }
