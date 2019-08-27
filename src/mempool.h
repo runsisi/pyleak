@@ -27,11 +27,12 @@
 #include <boost/container/flat_set.hpp>
 #include <boost/container/flat_map.hpp>
 
-#include <common/Formatter.h>
-#include "include/ceph_assert.h"
-#include "include/compact_map.h"
-#include "include/compact_set.h"
+//#include <common/Formatter.h>
+//#include "include/ceph_assert.h"
+//#include "include/compact_map.h"
+//#include "include/compact_set.h"
 
+#include <jemalloc/jemalloc.h>
 
 /*
 
@@ -146,27 +147,7 @@ namespace mempool {
 // define memory pools
 
 #define DEFINE_MEMORY_POOLS_HELPER(f) \
-  f(bloom_filter)		      \
-  f(bluestore_alloc)		      \
-  f(bluestore_cache_data)	      \
-  f(bluestore_cache_onode)	      \
-  f(bluestore_cache_other)	      \
-  f(bluestore_fsck)		      \
-  f(bluestore_txc)		      \
-  f(bluestore_writing_deferred)	      \
-  f(bluestore_writing)		      \
-  f(bluefs)			      \
-  f(buffer_anon)		      \
-  f(buffer_meta)		      \
-  f(osd)			      \
-  f(osd_mapbl)			      \
-  f(osd_pglog)			      \
-  f(osdmap)			      \
-  f(osdmap_mapping)		      \
-  f(pgmap)			      \
-  f(mds_co)			      \
-  f(unittest_1)			      \
-  f(unittest_2)
+  f(rbdx)
 
 
 // give them integer ids
@@ -204,10 +185,10 @@ static_assert(sizeof(shard_t) == 128, "shard_t should be cacheline-sized");
 struct stats_t {
   ssize_t items = 0;
   ssize_t bytes = 0;
-  void dump(ceph::Formatter *f) const {
-    f->dump_int("items", items);
-    f->dump_int("bytes", bytes);
-  }
+//  void dump(ceph::Formatter *f) const {
+//    f->dump_int("items", items);
+//    f->dump_int("bytes", bytes);
+//  }
 
   stats_t& operator+=(const stats_t& o) {
     items += o.items;
@@ -270,10 +251,10 @@ public:
   void get_stats(stats_t *total,
 		 std::map<std::string, stats_t> *by_type) const;
 
-  void dump(ceph::Formatter *f, stats_t *ptotal=0) const;
+//  void dump(ceph::Formatter *f, stats_t *ptotal=0) const;
 };
 
-void dump(ceph::Formatter *f);
+//void dump(ceph::Formatter *f);
 
 
 // STL allocator for use with containers.  All actual state
@@ -322,7 +303,7 @@ public:
     if (type) {
       type->items += n;
     }
-    T* r = reinterpret_cast<T*>(new char[total]);
+    T* r = reinterpret_cast<T*>(::jemalloc(total));
     return r;
   }
 
@@ -334,7 +315,7 @@ public:
     if (type) {
       type->items -= n;
     }
-    delete[] reinterpret_cast<char*>(p);
+    ::jefree(reinterpret_cast<char*>(p));
   }
 
   T* allocate_aligned(size_t n, size_t align, void *p = nullptr) {
@@ -346,7 +327,7 @@ public:
       type->items += n;
     }
     char *ptr;
-    int rc = ::posix_memalign((void**)(void*)&ptr, align, total);
+    int rc = ::jeposix_memalign((void**)(void*)&ptr, align, total);
     if (rc)
       throw std::bad_alloc();
     T* r = reinterpret_cast<T*>(ptr);
@@ -361,7 +342,7 @@ public:
     if (type) {
       type->items -= n;
     }
-    ::free(p);
+    ::jefree(p);
   }
 
   void destroy(T* p) {
@@ -400,17 +381,6 @@ public:
     template<typename k,typename v, typename cmp = std::less<k> >	\
     using map = std::map<k, v, cmp,					\
 			 pool_allocator<std::pair<const k,v>>>;		\
-                                                                        \
-    template<typename k,typename v, typename cmp = std::less<k> >       \
-    using compact_map = compact_map<k, v, cmp,                          \
-			 pool_allocator<std::pair<const k,v>>>;         \
-                                                                        \
-    template<typename k,typename v, typename cmp = std::less<k> >       \
-    using compact_multimap = compact_multimap<k, v, cmp,                \
-			 pool_allocator<std::pair<const k,v>>>;         \
-                                                                        \
-    template<typename k, typename cmp = std::less<k> >                  \
-    using compact_set = compact_set<k, cmp, pool_allocator<k>>;         \
                                                                         \
     template<typename k,typename v, typename cmp = std::less<k> >	\
     using multimap = std::multimap<k,v,cmp,				\
@@ -514,10 +484,10 @@ bool operator!=(const std::vector<T, mempool::pool_allocator<pool_index, T>>& lh
 #define MEMPOOL_CLASS_HELPERS()						\
   void *operator new(size_t size);					\
   void *operator new[](size_t size) noexcept {				\
-    ceph_abort_msg("no array new");					\
+    assert("no array new");					\
     return nullptr; }							\
   void  operator delete(void *);					\
-  void  operator delete[](void *) { ceph_abort_msg("no array delete"); }
+  void  operator delete[](void *) { assert("no array delete"); }
 
 
 // Use this in some particular .cc file to match each class with a

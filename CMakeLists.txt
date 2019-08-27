@@ -7,7 +7,7 @@ include(BuildJemalloc)
 
 add_subdirectory(pybind11)
 
-pybind11_add_module(x src/rbdx.cc src/librbdx.cc)
+pybind11_add_module(x src/rbdx.cc src/librbdx.cc src/mempool.cc)
 
 add_dependencies(x jemalloc)
 target_include_directories(x PRIVATE
