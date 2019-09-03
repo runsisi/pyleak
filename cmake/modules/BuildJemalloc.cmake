@@ -9,7 +9,7 @@ function(do_build_jemalloc)
 
   list(APPEND jemalloc_CONFIG_ARGS --prefix=${jemalloc_INSTALL_DIR})
   list(APPEND jemalloc_CONFIG_ARGS --disable-initial-exec-tls)
-  #list(APPEND jemalloc_CONFIG_ARGS --disable-cxx)
+  list(APPEND jemalloc_CONFIG_ARGS --disable-cxx)
   #list(APPEND jemalloc_CONFIG_ARGS --without-export)
   list(APPEND jemalloc_CONFIG_ARGS --enable-debug)
   #list(APPEND jemalloc_CONFIG_ARGS --with-jemalloc-prefix=xxx_)

@@ -9,10 +9,10 @@ build_jemalloc()
 
 add_subdirectory(pybind11)
 
-pybind11_add_module(x src/rbdx.cc src/librbdx.cc)
+pybind11_add_module(x src/rbdx.cc src/librbdx.cc src/je.cc)
 
 target_link_libraries(x PRIVATE
-  ${JEMALLOC_SHARED_LIBRARY}
+  ${JEMALLOC_STATIC_LIBRARY}
 )
 #target_link_libraries(x PRIVATE
 #  tcmalloc
