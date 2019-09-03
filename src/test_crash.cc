@@ -5,6 +5,7 @@
  *      Author: runsisi
  */
 
+#include <memory>
 #include <dlfcn.h>
 
 typedef void (*init_t)();
@@ -14,6 +15,9 @@ int main() {
 //  int* p = new int;
 //  *p = 0;
 //  delete p;
+
+  void* ptr = std::malloc(sizeof(int));
+  std::free(ptr);
 
   void *handle = dlopen("./libcrash.so", RTLD_LAZY);
   if (!handle) {

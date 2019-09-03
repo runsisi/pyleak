@@ -39,7 +39,7 @@ target_link_libraries(crash PRIVATE
 
 add_executable(test_crash src/test_crash.cc)
 target_link_libraries(test_crash PRIVATE
-#  ${JEMALLOC_SHARED_LIBRARY}
+  ${JEMALLOC_SHARED_LIBRARY}
   "dl"
 )
 add_dependencies(test_crash crash)
