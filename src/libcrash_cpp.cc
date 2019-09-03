@@ -17,5 +17,5 @@ void libcrash_init() {
   *p = 0;
   delete p;
 
-  cout << "libcrash_init" << endl;
+  cout << "libcrash_init_cpp" << endl;
 }

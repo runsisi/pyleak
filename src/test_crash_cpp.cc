@@ -19,7 +19,7 @@ int main() {
   void* ptr = std::malloc(sizeof(int));
   std::free(ptr);
 
-  void *handle = dlopen("./libcrash.so", RTLD_LAZY);
+  void *handle = dlopen("./libcrash_cpp.so", RTLD_LAZY);
   if (!handle) {
     char* err = dlerror();
     return -1;
