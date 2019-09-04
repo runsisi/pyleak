@@ -30,7 +30,7 @@ target_compile_options(crash_cpp PRIVATE
 )
 target_link_libraries(crash_cpp PRIVATE
   ${JEMALLOC_SHARED_LIBRARY}
-#  "pthread"
+  "pthread"
 )
 
 #
@@ -41,7 +41,7 @@ add_library(crash_c SHARED
   src/libcrash_c.c
 )
 target_link_libraries(crash_c PRIVATE
-  ${JEMALLOC_STATIC_LIBRARY}
+  ${JEMALLOC_SHARED_LIBRARY}
   "pthread"
 )
 
@@ -53,6 +53,7 @@ add_executable(test_crash_cpp src/test_crash_cpp.cc)
 target_link_libraries(test_crash_cpp PRIVATE
   ${JEMALLOC_SHARED_LIBRARY}
   "dl"
+  "crash_cpp"
 )
 add_dependencies(test_crash_cpp crash_cpp)
 
