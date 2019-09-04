@@ -23,7 +23,7 @@ target_link_libraries(x PRIVATE
 #
 
 add_library(crash_cpp SHARED
-  src/libcrash_cpp.cc
+  src/libcrash_cpp.cc src/je.cc
 )
 target_compile_options(crash_cpp PRIVATE
   "-std=c++14"
@@ -31,7 +31,20 @@ target_compile_options(crash_cpp PRIVATE
 target_link_libraries(crash_cpp PRIVATE
   ${JEMALLOC_SHARED_LIBRARY}
   "pthread"
+#  PRIVATE "-Wl,--dynamic-list-cpp-new"
+  PRIVATE "-Wl,-Bsymbolic-functions"
 )
+
+#
+# test_crash_cpp
+#
+
+add_executable(test_crash_cpp src/test_crash_cpp.cc)
+target_link_libraries(test_crash_cpp PRIVATE
+#  ${JEMALLOC_SHARED_LIBRARY}
+  "dl"
+)
+add_dependencies(test_crash_cpp crash_cpp)
 
 #
 # libcrash_c
@@ -44,18 +57,6 @@ target_link_libraries(crash_c PRIVATE
   ${JEMALLOC_SHARED_LIBRARY}
   "pthread"
 )
-
-#
-# test_crash_cpp
-#
-
-add_executable(test_crash_cpp src/test_crash_cpp.cc)
-target_link_libraries(test_crash_cpp PRIVATE
-  ${JEMALLOC_SHARED_LIBRARY}
-  "dl"
-  "crash_cpp"
-)
-add_dependencies(test_crash_cpp crash_cpp)
 
 #
 # test_crash_c

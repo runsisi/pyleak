@@ -26,7 +26,7 @@ function(do_build_jemalloc)
     PREFIX ${jemalloc_BINARY_DIR}
     SOURCE_DIR ${jemalloc_SOURCE_DIR}
     CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER}
-        <SOURCE_DIR>/configure ${jemalloc_CONFIG_ARGS}
+        <SOURCE_DIR>/configure ${jemalloc_CONFIG_ARGS} LDFLAGS=-Bsymbolic-functions
     BINARY_DIR ${jemalloc_BINARY_DIR}
     BUILD_COMMAND $(MAKE)
     BUILD_ALWAYS TRUE
