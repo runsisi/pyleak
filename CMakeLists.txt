@@ -4,3 +4,5 @@ project(x)
 add_subdirectory(pybind11)
 
 pybind11_add_module(x src/x.cc)
+
+install(TARGETS x DESTINATION bin)
